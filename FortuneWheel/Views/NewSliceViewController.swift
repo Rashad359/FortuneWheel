@@ -10,11 +10,22 @@ protocol NewSliceViewDelegate: AnyObject {
     func didAddSlice(with category: String, color: UIColor)
 }
 
-final class NewSliceViewController: UIViewController, Keyboardable {
+final class NewSliceViewController: BaseViewController, Keyboardable {
     
     var targetConstraint: SnapKit.Constraint?
     
     weak var delegate: NewSliceViewDelegate? = nil
+    
+    private let viewModel: NewSliceViewModel
+    
+    init(viewModel: NewSliceViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    @MainActor required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     private let addLabel: UILabel = {
         let label = UILabel()
@@ -61,16 +72,10 @@ final class NewSliceViewController: UIViewController, Keyboardable {
             string: "Category...",
             attributes: [NSAttributedString.Key.foregroundColor: UIColor.gray]
         )
+        textField.delegate = self
         
         return textField
     }()
-    
-//    private let sliceColorTextField: UITextField = {
-//        let textField = UITextField()
-//        textField.placeholder = "Color..."
-//        
-//        return textField
-//    }()
     
     private let sliceNameStackView: UIStackView = {
         let stackView = UIStackView()
@@ -81,12 +86,9 @@ final class NewSliceViewController: UIViewController, Keyboardable {
         return stackView
     }()
     
-    private lazy var addSliceButton: UIButton = {
-        let button = UIButton(type: .system)
+    private lazy var addSliceButton: BaseButton = {
+        let button = BaseButton(type: .system)
         button.setTitle("Add slice", for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = .link
-        button.layer.cornerRadius = 12
         button.addTarget(self, action: #selector(didTapAddSlice), for: .touchUpInside)
         
         return button
@@ -104,16 +106,11 @@ final class NewSliceViewController: UIViewController, Keyboardable {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupUI()
         startKeyboardObserve(with: -10)
     }
     
-    private func setupUI() {
-        
-        // Dismissing keyboard
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapView))
-        view.addGestureRecognizer(tapGesture)
-        view.backgroundColor = .white
+    override func setupUI() {
+        super.setupUI()
         
         [topStackView, sliceNameStackView, addSliceButton, warningLabel].forEach(view.addSubview)
         
@@ -134,7 +131,6 @@ final class NewSliceViewController: UIViewController, Keyboardable {
         addSliceButton.snp.makeConstraints { make in
             targetConstraint = make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-10).constraint
             make.horizontalEdges.equalToSuperview().inset(10)
-            make.height.equalTo(48)
         }
         
         backButton.snp.makeConstraints { make in
@@ -145,6 +141,10 @@ final class NewSliceViewController: UIViewController, Keyboardable {
             make.top.equalTo(sliceNameStackView.snp.bottom).offset(10)
             make.leading.equalToSuperview().offset(10)
         }
+        
+        // Dismissing keyboard
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapView))
+        view.addGestureRecognizer(tapGesture)
     }
     
     @objc private func didTapView() {
@@ -152,10 +152,12 @@ final class NewSliceViewController: UIViewController, Keyboardable {
     }
     
     @objc private func didTapAddSlice() {
-        guard let sliceText = sliceNameTextField.text, !sliceText.isEmpty else {
+        sliceNameTextField.resignFirstResponder()
+        guard let sliceText = sliceNameTextField.text, !sliceText.trimmingCharacters(in: .whitespaces).isEmpty else {
             warningLabel.isHidden = false
             return
         }
+        
         warningLabel.isHidden = true
         self.delegate?.didAddSlice(with: sliceText, color: .random())
         self.dismiss(animated: true)
@@ -163,5 +165,12 @@ final class NewSliceViewController: UIViewController, Keyboardable {
     
     @objc private func didTapBack() {
         self.dismiss(animated: true)
+    }
+}
+
+extension NewSliceViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        didTapAddSlice()
+        return true
     }
 }

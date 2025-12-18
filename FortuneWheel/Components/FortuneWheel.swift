@@ -35,10 +35,10 @@ class FortuneWheel: UIView {
     private var slices : [Slice]?
     
     // ImageView that holds an image which indicates which slice has been selected.
-    private var indicator = UIImageView.init()
+    private var indicator = UIImageView()
     
     // Button which start the spin game. This is placed at the center of the wheel.
-    var playButton: UIButton = UIButton.init(type: .custom)
+    var playButton: UIButton = UIButton(type: .custom)
     
     // Angle each slice occupies
     private var sectorAngle: Radians = 0
@@ -52,7 +52,7 @@ class FortuneWheel: UIView {
     
     // Creates and returns a Fortune Wheel with its center aligned to center CGPoint, diameter and slices drawn
     init(center: CGPoint, diameter: CGFloat, slices: [Slice]) {
-        super.init(frame: CGRect.init(origin: CGPoint(x: center.x - diameter / 2,
+        super.init(frame: CGRect(origin: CGPoint(x: center.x - diameter / 2,
                                                       y: center.y - diameter / 2),
                                       size: CGSize.init(width: diameter,
                                                         height: diameter)))
@@ -82,10 +82,10 @@ class FortuneWheel: UIView {
         let xPosition: CGFloat = (self.bounds.width / 2) - (width / 2)
         let yPosition: CGFloat = (self.bounds.height / 2) - (height / 2)
         
-        self.wheelView = UIView.init(frame: CGRect.init(x: xPosition,
-                                                        y: yPosition,
-                                                        width: width,
-                                                        height: height))
+        self.wheelView = UIView(frame: CGRect.init(x: xPosition,
+                                                   y: yPosition,
+                                                    width: width,
+                                                    height: height))
         self.wheelView.backgroundColor = .gray
         self.wheelView.layer.cornerRadius = width / 2
         self.wheelView.clipsToBounds = true
@@ -130,7 +130,7 @@ class FortuneWheel: UIView {
             self.delegate?.finishSelecting(index: nil, error: error)
         } else {
             // When the animation is complete transform fixes the view position to selection angle
-            self.wheelView.transform = CGAffineTransform.init(rotationAngle: self.selectionAngle)
+            self.wheelView.transform = CGAffineTransform(rotationAngle: self.selectionAngle)
             self.delegate?.finishSelecting(index: self.selectionIndex, error: nil)
         }
         
@@ -142,11 +142,11 @@ class FortuneWheel: UIView {
     // Add selection indicators
     private func addIndicator() {
         //Calculating the position of the indicator such that half overlaps with the view and the rest is outside of the view and locating indicator at the right side center of the wheel.
-        let position = CGPoint.init(x: self.frame.width - self.indicatorSize.width,
-                                    y: self.bounds.height / 2 - self.indicatorSize.height / 2)
+        let position = CGPoint(x: self.frame.width - self.indicatorSize.width,
+                               y: self.bounds.height / 2 - self.indicatorSize.height / 2)
         
-        self.indicator.frame = CGRect.init(origin: position,
-                                           size: self.indicatorSize)
+        self.indicator.frame = CGRect(origin: position,
+                                      size: self.indicatorSize)
         self.indicator.image = UIImage(systemName: "arrowtriangle.left.fill")
         self.indicator.tintColor = .black
         if self.indicator.superview == nil {
@@ -155,12 +155,12 @@ class FortuneWheel: UIView {
     }
     
     private func addStartBttn() {
-        let size = CGSize.init(width: self.bounds.width * 0.15,
-                               height: self.bounds.height * 0.15)
-        let point = CGPoint.init(x: self.frame.width / 2 - size.width / 2,
-                                 y: self.frame.height / 2 - size.height / 2)
+        let size = CGSize(width: self.bounds.width * 0.15,
+                          height: self.bounds.height * 0.15)
+        let point = CGPoint(x: self.frame.width / 2 - size.width / 2,
+                            y: self.frame.height / 2 - size.height / 2)
         self.playButton.setTitle("Play", for: .normal)
-        self.playButton.frame = CGRect.init(origin: point, size: size)
+        self.playButton.frame = CGRect(origin: point, size: size)
         
         // we will add the StartAction method later on
         self.playButton.addTarget(self, action: #selector(startAction), for: .touchUpInside)

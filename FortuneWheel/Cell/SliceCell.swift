@@ -22,14 +22,30 @@ final class SliceCell: UITableViewCell {
     
     private lazy var categoryOdds: UITextField = {
         let textField = UITextField()
-        textField.addTarget(self, action: #selector(didChangeOdds), for: .editingDidEnd)
+        textField.addTarget(self, action: #selector(didChangeOdds), for: .editingChanged)
         textField.textColor = .black
         textField.attributedPlaceholder = NSAttributedString(
             string: "odds...",
             attributes: [NSAttributedString.Key.foregroundColor: UIColor.gray]
         )
+        textField.keyboardType = .numberPad
+        textField.delegate = self
+        textField.textAlignment = .right
         
         return textField
+    }()
+    
+    private lazy var toolbar: UIToolbar = {
+        let toolbar = UIToolbar()
+        toolbar.sizeToFit()
+        
+        let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        
+        let doneButton = UIBarButtonItem(title: "Done", style: .plain, target: self, action: #selector(didTapDone))
+        
+        toolbar.items = [flexibleSpace, doneButton]
+        
+        return toolbar
     }()
     
     private let mainStackView: UIStackView = {
@@ -53,6 +69,8 @@ final class SliceCell: UITableViewCell {
     
     private func setupCell() {
         
+        categoryOdds.inputAccessoryView = toolbar
+        
         selectionStyle = .none
         backgroundColor = .white
         
@@ -72,6 +90,10 @@ final class SliceCell: UITableViewCell {
               let value = Int(text) else { return }
         delegate?.didChangeRate(value: value, in: self)
     }
+    
+    @objc private func didTapDone() {
+        endEditing(true)
+    }
 }
 
 extension SliceCell {
@@ -83,5 +105,20 @@ extension SliceCell {
     func configure(_ item: Item) {
         categoryName.text = item.categoryName
         categoryOdds.text = String(item.categoryOdds)
+    }
+}
+
+extension SliceCell: UITextFieldDelegate {
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersInRanges ranges: [NSValue], replacementString string: String) -> Bool {
+        let allowedCharacters = CharacterSet.decimalDigits
+        let characterSet = CharacterSet(charactersIn: string)
+        return allowedCharacters.isSuperset(of: characterSet)
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        didChangeOdds()
+        categoryOdds.resignFirstResponder()
+        return true
     }
 }

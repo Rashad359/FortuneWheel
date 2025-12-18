@@ -53,7 +53,7 @@ class FortuneWheelSlice: CALayer {
         let lineLength = CGFloat( (2 * radius * sin(self.sectorAngle / 2)) )
         
         // The center position of the wheel
-        let center = CGPoint.init(x: self.frame.width / 2, y: self.frame.height / 2)
+        let center = CGPoint(x: self.frame.width / 2, y: self.frame.height / 2)
         
         // Half perimeter used for calculation of size
         let s = (radius + radius + lineLength) / 2
@@ -119,11 +119,6 @@ class FortuneWheelSlice: CALayer {
                                height: labelSize.height)
         
         label.drawText(in: labelRect)
-        
-//        image.draw(in: CGRect.init(x: xPosition,
-//                                   y: yPosition,
-//                                   width: size,
-//                                   height: size))
         UIGraphicsPopContext()
     }
     

@@ -1,6 +1,6 @@
 import UIKit
 
-class Slice {
+struct Slice {
     // Color of the slice default is clear
     var color = UIColor.clear
     
@@ -18,5 +18,20 @@ class Slice {
     
     init(label: UILabel) {
         self.label = label
+    }
+    
+    init(data: SliceData) {
+        let label = UILabel()
+        label.text = data.text
+        label.textAlignment = .center
+        label.textColor = .white
+        label.font = UIFont.boldSystemFont(ofSize: 16)
+        label.numberOfLines = 0
+        label.adjustsFontSizeToFitWidth = true
+        label.minimumScaleFactor = 0.5
+        
+        self.label = label
+        self.color = data.uiColor
+        self.dropRate = data.dropRate
     }
 }
