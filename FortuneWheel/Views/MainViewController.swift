@@ -86,8 +86,14 @@ final class MainViewController: BaseViewController {
     
 
     @objc private func didTapSettings() {
-        viewModel.navigateToSettings(in: &cancellable) {[weak self] _ in
-            self?.updateFortuneWheel()
+        viewModel.navigateToSettings(in: &cancellable) {[weak self] updateNeeded in
+            if updateNeeded {
+                
+                self?.updateFortuneWheel()
+                
+            } else {
+                //Don't update
+            }
         }
     }
     
@@ -116,12 +122,11 @@ extension MainViewController: FortuneWheelDelegate {
     }
 }
 
-//extension MainViewController: SettingsViewDelegate {
-//    func slicesChanged(slices: [Slice]) {
-//        viewModel.saveSlices(slices: slices)
-//        updateFortuneWheel()
-//    }
-//}
+
+
+
+
+
 
 
 // MARK: - Unused code (delete before release)

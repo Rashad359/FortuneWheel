@@ -193,6 +193,14 @@ extension SettingsViewController: UITableViewDataSource, UITableViewDelegate, Sl
 }
 
 
+
+
+
+
+
+
+
+
 // MARK: - Unused or deprecated code (delete before release)
 
 //        guard let indexPath = tableView.indexPath(for: cell) else { return }
