@@ -2,6 +2,7 @@
 
 import Foundation
 import UIKit
+import Combine
 
 final class MainViewModel {
     private let router: Router
@@ -25,12 +26,12 @@ final class MainViewModel {
     
     // MARK: - Navigation
     
-    func navigateToNewCategory(delegate: NewSliceViewDelegate) {
-        router.goToNewCategory(delegate: delegate)
+    func navigateToNewCategory(in storage: inout Set<AnyCancellable>, completion: @escaping ((String, UIColor)) -> Void) {
+        router.goToNewCategory(in: &storage, completion: completion)
     }
     
-    func navigateToSettings(delegate: SettingsViewDelegate) {
-        router.goToSettings(delegate: delegate)
+    func navigateToSettings(in storage: inout Set<AnyCancellable>, receive: @escaping(Bool) -> Void) {
+        router.goToSettings(in: &storage, receive: receive)
     }
     
     // MARK: - Saving and getting slices from userDefaults

@@ -2,17 +2,18 @@
 
 import Foundation
 import UIKit
+import Combine
 
 class Router {
     weak var view: UIViewController?
     
-    func goToNewCategory(delegate: NewSliceViewDelegate) {
-        let newSliceVC = NewSliceBuilder().build(with: delegate)
+    func goToNewCategory(in storage: inout Set<AnyCancellable>, completion: @escaping((String, UIColor)) -> Void) {
+        let newSliceVC = NewSliceBuilder().build(in: &storage, completion: completion)
         view?.present(newSliceVC, animated: true)
     }
     
-    func goToSettings(delegate: SettingsViewDelegate) {
-        let settingsVC = SettingsBuilder().build(with: delegate)
+    func goToSettings(in storage: inout Set<AnyCancellable>, receive: @escaping(Bool) -> Void) {
+        let settingsVC = SettingsBuilder().build(in: &storage, receive: receive)
         view?.present(settingsVC, animated: true)
     }
 }

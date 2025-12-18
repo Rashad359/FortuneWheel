@@ -3,16 +3,15 @@
 import Foundation
 import UIKit
 import SnapKit
-
-protocol SettingsViewDelegate: AnyObject {
-    func slicesChanged(slices: [Slice])
-}
+import Combine
 
 final class SettingsViewController: BaseViewController, Keyboardable {
     
     var targetConstraint: SnapKit.Constraint?
     
     private let viewModel: SettingsViewModel
+    
+    @Published private(set) var updateWheel = false
     
     init(viewModel: SettingsViewModel) {
         self.viewModel = viewModel
@@ -22,8 +21,6 @@ final class SettingsViewController: BaseViewController, Keyboardable {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    weak var delegate: SettingsViewDelegate? = nil
     
     private lazy var tableView: UITableView = {
         let tableView = UITableView()
@@ -115,7 +112,8 @@ final class SettingsViewController: BaseViewController, Keyboardable {
         viewModel.applyChanges {[weak self] isCorrect in
             if isCorrect {
                 
-                self?.delegate?.slicesChanged(slices: self?.viewModel.getLocalSlices() ?? [])
+                self?.viewModel.saveSlices(slices: self?.viewModel.getLocalSlices() ?? [])
+                self?.updateWheel = true
                 self?.dismiss(animated: true)
                 
             } else {
@@ -156,7 +154,7 @@ extension SettingsViewController: UITableViewDataSource, UITableViewDelegate, Sl
             
             self?.viewModel.saveSlices(slices: deletedSlices)
             
-            self?.delegate?.slicesChanged(slices: self?.viewModel.getSlices() ?? [])
+            self?.updateWheel = true
             
             self?.tableView.reloadData()
         }
@@ -170,6 +168,7 @@ extension SettingsViewController: UITableViewDataSource, UITableViewDelegate, Sl
             
             let alert = UIAlertController(title: "New title", message: "Please put the new title", preferredStyle: .alert)
             alert.addTextField()
+            alert.textFields?.first?.text = self?.viewModel.getSlices()[indexPath.row].label.text
             
             let cancel = UIAlertAction(title: "Cancel", style: .cancel)
             let confirm = UIAlertAction(title: "Confirm", style: .default) { _ in
@@ -179,7 +178,7 @@ extension SettingsViewController: UITableViewDataSource, UITableViewDelegate, Sl
                 alteredSlices[indexPath.row].label.text = printedText
                 self?.viewModel.saveSlices(slices: alteredSlices)
                 
-                self?.delegate?.slicesChanged(slices: self?.viewModel.getSlices() ?? [])
+                self?.updateWheel = true
                 
                 self?.tableView.reloadData()
             }

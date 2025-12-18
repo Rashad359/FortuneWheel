@@ -2,10 +2,13 @@
 
 import UIKit
 import SnapKit
+import Combine
 
 final class MainViewController: BaseViewController {
     
     private let viewModel: MainViewModel
+    
+    private var cancellable = Set<AnyCancellable>()
     
     init(viewModel: MainViewModel) {
         self.viewModel = viewModel
@@ -83,11 +86,17 @@ final class MainViewController: BaseViewController {
     
 
     @objc private func didTapSettings() {
-        viewModel.navigateToSettings(delegate: self)
+        viewModel.navigateToSettings(in: &cancellable) {[weak self] _ in
+            self?.updateFortuneWheel()
+        }
     }
     
     @objc private func didTapAdd() {
-        viewModel.navigateToNewCategory(delegate: self)
+        viewModel.navigateToNewCategory(in: &cancellable) {[weak self] (category, color) in
+            
+            self?.viewModel.appendSlice(category: category, color: color)
+            self?.updateFortuneWheel()
+        }
     }
 
 }
@@ -107,19 +116,12 @@ extension MainViewController: FortuneWheelDelegate {
     }
 }
 
-extension MainViewController: NewSliceViewDelegate {
-    func didAddSlice(with category: String, color: UIColor) {
-        viewModel.appendSlice(category: category, color: color)
-        updateFortuneWheel()
-    }
-}
-
-extension MainViewController: SettingsViewDelegate {
-    func slicesChanged(slices: [Slice]) {
-        viewModel.saveSlices(slices: slices)
-        updateFortuneWheel()
-    }
-}
+//extension MainViewController: SettingsViewDelegate {
+//    func slicesChanged(slices: [Slice]) {
+//        viewModel.saveSlices(slices: slices)
+//        updateFortuneWheel()
+//    }
+//}
 
 
 // MARK: - Unused code (delete before release)

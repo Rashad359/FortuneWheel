@@ -3,18 +3,19 @@
 import Foundation
 import UIKit
 import SnapKit
-
-// Change to combine later
-
-protocol NewSliceViewDelegate: AnyObject {
-    func didAddSlice(with category: String, color: UIColor)
-}
+import Combine
 
 final class NewSliceViewController: BaseViewController, Keyboardable {
     
     var targetConstraint: SnapKit.Constraint?
     
-    weak var delegate: NewSliceViewDelegate? = nil
+    // MARK: - Private subjects
+    private let sliceSubject = PassthroughSubject<(String, UIColor), Never>()
+    
+    // MARK: - Public read-only Publishers
+    var slicePublisher: AnyPublisher<(String, UIColor), Never> {
+        sliceSubject.eraseToAnyPublisher()
+    }
     
     private let viewModel: NewSliceViewModel
     
@@ -159,7 +160,7 @@ final class NewSliceViewController: BaseViewController, Keyboardable {
         }
         
         warningLabel.isHidden = true
-        self.delegate?.didAddSlice(with: sliceText, color: .random())
+        sliceSubject.send((sliceText, .random()))
         self.dismiss(animated: true)
     }
     
