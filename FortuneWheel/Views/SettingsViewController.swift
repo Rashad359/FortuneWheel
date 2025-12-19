@@ -13,6 +13,8 @@ final class SettingsViewController: BaseViewController, Keyboardable {
     
     @Published private(set) var updateWheel = false
     
+    private var cancellable = Set<AnyCancellable>()
+    
     init(viewModel: SettingsViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
@@ -70,6 +72,7 @@ final class SettingsViewController: BaseViewController, Keyboardable {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        bindViewModel()
         startKeyboardObserve(with: -10)
     }
     
@@ -98,6 +101,18 @@ final class SettingsViewController: BaseViewController, Keyboardable {
         // Dismiss keyboard
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapView))
         view.addGestureRecognizer(tapGesture)
+    }
+    
+    private func bindViewModel() {
+        viewModel.$deleateSlice.sink {[weak self] somethingWrong in
+            if somethingWrong {
+                self?.showAlert(title: "Too little categories",
+                                message: "You should have at least one category",
+                                buttonTitle: "Cancel")
+            } else {
+                // Success
+            }
+        }.store(in: &cancellable)
     }
     
     @objc private func didTapView() {
@@ -147,12 +162,11 @@ extension SettingsViewController: UITableViewDataSource, UITableViewDelegate, Sl
     }
     
     func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        
+        // Delete category
         let deleteAction = UIContextualAction(style: .destructive, title: "Delete") {[weak self] _, _, _ in
-            var deletedSlices: [Slice] = self?.viewModel.getSlices() ?? []
             
-            deletedSlices.remove(at: indexPath.row)
-            
-            self?.viewModel.saveSlices(slices: deletedSlices)
+            self?.viewModel.deleteSlice(at: indexPath)
             
             self?.updateWheel = true
             
@@ -164,6 +178,7 @@ extension SettingsViewController: UITableViewDataSource, UITableViewDelegate, Sl
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         
+        // Edit the name of the category
         let editAction = UIContextualAction(style: .normal, title: "Edit") {[weak self] _, _, _ in
             
             let alert = UIAlertController(title: "New title", message: "Please put the new title", preferredStyle: .alert)

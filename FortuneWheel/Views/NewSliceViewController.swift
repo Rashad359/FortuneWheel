@@ -112,6 +112,7 @@ final class NewSliceViewController: BaseViewController, Keyboardable {
     
     override func setupUI() {
         super.setupUI()
+        sliceNameTextField.becomeFirstResponder()
         
         [topStackView, sliceNameStackView, addSliceButton, warningLabel].forEach(view.addSubview)
         

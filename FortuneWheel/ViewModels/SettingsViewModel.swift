@@ -2,8 +2,12 @@
 
 import Foundation
 import UIKit
+import Combine
 
 final class SettingsViewModel {
+    
+    @Published private(set) var deleateSlice: Bool = false
+    
     private let userDefaults = UserDefaultsManager.shared
     
     private lazy var slices = userDefaults.getSlices()
@@ -55,6 +59,57 @@ final class SettingsViewModel {
             
             completion(true)
             
+        }
+    }
+    
+    func deleteSlice(at indexPath: IndexPath) {
+        var deletedSlices: [Slice] = self.getSlices()
+        
+        deletedSlices.remove(at: indexPath.row)
+        
+        var finalSlices: [Slice] = []
+        
+        var totalSum = 0
+        
+        var toAdd = 0
+        
+        var distributedTotal = 0
+        
+        for slice in deletedSlices {
+            totalSum += slice.dropRate
+        }
+        
+        if totalSum < 100 || totalSum > 100 {
+            // The odds are wrong. Distribute them to add up to 100
+            
+            guard deletedSlices.count != 0 else {
+                self.deleateSlice = true
+//                self?.showAlert(title: "Too little categories",
+//                                message: "You should have at least one category",
+//                                buttonTitle: "Cancel")
+                return
+            }
+            
+            toAdd = (100 - totalSum) / deletedSlices.count
+            
+            for slice in deletedSlices {
+                var slice = slice
+                slice.dropRate += toAdd
+                distributedTotal += slice.dropRate
+                finalSlices.append(slice)
+            }
+            
+            let leftOver = 100 - distributedTotal
+            
+            if let fixIndex = finalSlices.indices.first(where: { $0 != indexPath.row }) {
+                finalSlices[fixIndex].dropRate += leftOver
+            }
+            
+            self.saveSlices(slices: finalSlices)
+            
+        } else {
+            // The odds are right
+            self.saveSlices(slices: deletedSlices)
         }
     }
 }
