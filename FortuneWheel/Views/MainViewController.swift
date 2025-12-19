@@ -27,6 +27,14 @@ final class MainViewController: BaseViewController {
         return button
     }()
     
+    private lazy var changeColorButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setImage(UIImage(systemName: "paintbrush.pointed.fill"), for: .normal)
+        button.addTarget(self, action: #selector(didTapColor), for: .touchUpInside)
+        
+        return button
+    }()
+    
     private lazy var settingsButton: BaseButton = {
         let button = BaseButton(type: .system)
         button.setTitle("Settings", for: .normal)
@@ -44,6 +52,7 @@ final class MainViewController: BaseViewController {
         super.setupUI()
         view.addSubview(settingsButton)
         view.addSubview(addButton)
+        view.addSubview(changeColorButton)
         
         settingsButton.snp.makeConstraints { make in
             make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-10)
@@ -54,6 +63,12 @@ final class MainViewController: BaseViewController {
         addButton.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide).offset(10)
             make.trailing.equalToSuperview().offset(-20)
+            make.size.equalTo(40)
+        }
+        
+        changeColorButton.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(10)
+            make.leading.equalToSuperview().offset(20)
             make.size.equalTo(40)
         }
         
@@ -69,7 +84,7 @@ final class MainViewController: BaseViewController {
         }
     }
     
-    func showFortuneWheel() {
+    private func showFortuneWheel() {
         viewModel.addSlice(text: "Prize 1", color: .systemRed, dropRate: 50)
         viewModel.addSlice(text: "Prize 2", color: .systemBlue, dropRate: 50)
         updateFortuneWheel()
@@ -82,6 +97,15 @@ final class MainViewController: BaseViewController {
                                              slices: viewModel.getSlices())
         fortuneWheel.delegate = self
         self.view.addSubview(fortuneWheel)
+    }
+    
+    private func presentColorPicker() {
+        let colorPicker = UIColorPickerViewController()
+        colorPicker.title = "Background Color"
+        colorPicker.supportsAlpha = false
+        colorPicker.delegate = self
+        colorPicker.modalPresentationStyle = .popover
+        self.present(colorPicker, animated: true)
     }
     
 
@@ -104,7 +128,10 @@ final class MainViewController: BaseViewController {
             self?.updateFortuneWheel()
         }
     }
-
+    
+    @objc private func didTapColor() {
+        presentColorPicker()
+    }
 }
 
 extension MainViewController: FortuneWheelDelegate {
@@ -122,73 +149,8 @@ extension MainViewController: FortuneWheelDelegate {
     }
 }
 
-
-
-
-
-
-
-
-// MARK: - Unused code (delete before release)
-
-//        for i in 1...10 {
-//            // The images from assets naming from 1 to 5 are called here
-//            let slice = Slice.init(image: UIImage.init(named: "\(i <= 5 ? i : (i - 5))") ?? UIImage.actions)
-//            slice.color = .random()
-//            slices.append(slice)
-//        }
-//        let fortuneWheel = FortuneWheel.init(center: CGPoint(x: self.view.frame.width / 2,
-//                                                             y: self.view.frame.height / 2),
-//                                             diameter: 300,
-//                                             slices: slices)
-//        fortuneWheel.delegate = self
-//        self.view.addSubview(fortuneWheel)
-
-//        let settingsVC = SettingsViewController(slices: slices)
-//        settingsVC.delegate = self
-//        self.present(settingsVC, animated: true)
-
-//        let newSliceVC = NewSliceViewController()
-//        newSliceVC.delegate = self
-//        self.present(newSliceVC, animated: true)
-
-//        let randomValue = Int.random(in: 1...100)
-//
-//        var cumulativeRate = 0
-//
-//        for (index, slice) in viewModel.getSlices().enumerated() {
-//            cumulativeRate += slice.dropRate
-//
-//            if randomValue <= cumulativeRate {
-//                return index
-//            }
-//        }
-//
-//        print("Falling back")
-//        return 0
-
-//        let totalRate = 100
-//        var totalSlicesRate: Int = 0
-//        viewModel.getSlices().forEach( { totalSlicesRate += $0.dropRate} )
-//        let remainingRate = totalRate - totalSlicesRate
-//        viewModel.addSlice(text: category, color: color, dropRate: remainingRate)
-
-//    private func addSlice(text: String, color: UIColor, dropRate: Int) {
-//        let label = UILabel()
-//        label.text = text
-//        label.textAlignment = .center
-//        label.textColor = .white
-//        label.font = UIFont.boldSystemFont(ofSize: 16)
-//        label.numberOfLines = 0
-//        label.adjustsFontSizeToFitWidth = true
-//        label.minimumScaleFactor = 0.5
-//        var slice = Slice.init(label: label)
-//        slice.dropRate = dropRate
-//        slice.color = color
-//
-//        // Append new slice
-//        var slices = viewModel.getSlices()
-//        slices.append(slice)
-//        viewModel.saveSlices(slices: slices)
-//        print(slices)
-//    }
+extension MainViewController: UIColorPickerViewControllerDelegate {
+    func colorPickerViewController(_ viewController: UIColorPickerViewController, didSelect color: UIColor, continuously: Bool) {
+        view.backgroundColor = color
+    }
+}

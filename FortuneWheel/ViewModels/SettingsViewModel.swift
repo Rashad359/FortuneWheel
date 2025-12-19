@@ -84,9 +84,6 @@ final class SettingsViewModel {
             
             guard deletedSlices.count != 0 else {
                 self.deleateSlice = true
-//                self?.showAlert(title: "Too little categories",
-//                                message: "You should have at least one category",
-//                                buttonTitle: "Cancel")
                 return
             }
             
