@@ -19,8 +19,6 @@ class FortuneWheelSlice: CALayer {
     private var slice: Slice!
     
     
-    
-    
     // Start angle is the angle where the sector begins and sector angle is the angle, the sector covers
     init(frame: CGRect, startAngle: CGFloat, sectorAngle: CGFloat, slice: Slice) {
         super.init()
@@ -31,7 +29,7 @@ class FortuneWheelSlice: CALayer {
         self.frame = frame.inset(by: UIEdgeInsets.init(top: -10, left: 0, bottom: -10, right: 0))
         
         // Images where appearing distorted setting the scale solved the issue
-        self.contentsScale = UIScreen.main.scale
+        self.contentsScale = UITraitCollection.current.displayScale
         self.masksToBounds = true
     }
     

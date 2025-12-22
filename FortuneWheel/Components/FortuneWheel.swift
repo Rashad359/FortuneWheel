@@ -60,6 +60,17 @@ class FortuneWheel: UIView {
         self.initialSetUp()
     }
     
+    override func didMoveToWindow() {
+        super.didMoveToWindow()
+        
+        let scale = self.window?.screen.scale ?? UITraitCollection.current.displayScale
+        
+        self.layer.sublayers?.forEach { layer in
+            layer.contentsScale = scale
+            layer.setNeedsDisplay()
+        }
+    }
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
