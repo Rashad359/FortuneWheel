@@ -100,7 +100,7 @@ final class SliceCell: UITableViewCell {
         
         textWorkItem = workItem
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: workItem)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: workItem)
     }
     
     @objc private func didTapDone() {
