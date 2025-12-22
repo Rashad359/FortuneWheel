@@ -5,6 +5,7 @@ import UIKit
 import Combine
 
 final class MainViewModel {
+    
     private let router: Router
     
     private let userDefaults = UserDefaultsManager.shared
@@ -32,6 +33,10 @@ final class MainViewModel {
     
     func navigateToSettings(in storage: inout Set<AnyCancellable>, receive: @escaping(Bool) -> Void) {
         router.goToSettings(in: &storage, receive: receive)
+    }
+    
+    func navigateToColors(storage: inout Set<AnyCancellable>, completion: @escaping(Bool) -> Void) {
+        router.goToColors(storage: &storage, completion: completion)
     }
     
     // MARK: - Saving and getting slices from userDefaults

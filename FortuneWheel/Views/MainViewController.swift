@@ -10,6 +10,8 @@ final class MainViewController: BaseViewController {
     
     private var cancellable = Set<AnyCancellable>()
     
+    private var currentFortuneWheel: FortuneWheel?
+    
     init(viewModel: MainViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
@@ -91,12 +93,17 @@ final class MainViewController: BaseViewController {
     }
     
     private func updateFortuneWheel() {
+        
+        currentFortuneWheel?.removeFromSuperview()
+        
         let fortuneWheel = FortuneWheel.init(center: CGPoint(x: self.view.frame.width / 2,
                                                              y: self.view.frame.height / 2),
                                              diameter: 300,
                                              slices: viewModel.getSlices())
         fortuneWheel.delegate = self
         self.view.addSubview(fortuneWheel)
+        
+        self.currentFortuneWheel = fortuneWheel
     }
     
     private func presentColorPicker() {
@@ -130,7 +137,15 @@ final class MainViewController: BaseViewController {
     }
     
     @objc private func didTapColor() {
-        presentColorPicker()
+        viewModel.navigateToColors(storage: &cancellable) {[weak self] updateNeeded in
+            if updateNeeded {
+                
+                self?.updateFortuneWheel()
+                
+            } else {
+                //Don't update
+            }
+        }
     }
 }
 

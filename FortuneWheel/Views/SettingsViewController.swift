@@ -70,6 +70,24 @@ final class SettingsViewController: BaseViewController, Keyboardable {
         return button
     }()
     
+    private lazy var equateOdds: BaseButton = {
+        let button = BaseButton(type: .system)
+        button.setTitle("Make odds equal", for: .normal)
+        button.addTarget(self, action: #selector(didEquateOdds), for: .touchUpInside)
+        
+        return button
+    }()
+    
+    private let buttonStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .horizontal
+        stackView.alignment = .center
+        stackView.distribution = .fillEqually
+        stackView.spacing = 10
+        
+        return stackView
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         bindViewModel()
@@ -79,8 +97,9 @@ final class SettingsViewController: BaseViewController, Keyboardable {
     override func setupUI() {
         super.setupUI()
         
-        [tableView, topStackView, applySettings].forEach(view.addSubview)
+        [tableView, topStackView, buttonStackView].forEach(view.addSubview)
         [titleLabel, backButton].forEach(topStackView.addArrangedSubview)
+        [equateOdds, applySettings].forEach(buttonStackView.addArrangedSubview)
         
         topStackView.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(20)
@@ -93,7 +112,7 @@ final class SettingsViewController: BaseViewController, Keyboardable {
             make.bottom.equalTo(applySettings.snp.top).offset(-10)
         }
         
-        applySettings.snp.makeConstraints { make in
+        buttonStackView.snp.makeConstraints { make in
             targetConstraint = make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-10).constraint
             make.horizontalEdges.equalToSuperview().inset(10)
         }
@@ -137,6 +156,12 @@ final class SettingsViewController: BaseViewController, Keyboardable {
                 
             }
         }
+    }
+    
+    @objc private func didEquateOdds() {
+        viewModel.equateOdds()
+        
+        self.tableView.reloadData()
     }
 }
 

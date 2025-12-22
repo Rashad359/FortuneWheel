@@ -10,12 +10,15 @@ protocol SliceCellDelegate: AnyObject {
 
 final class SliceCell: UITableViewCell {
     
+    private var textWorkItem: DispatchWorkItem?
+    
     weak var delegate: SliceCellDelegate? = nil
     
     private let categoryName: UILabel = {
         let label = UILabel()
         label.text = "Category"
         label.textColor = .black
+        label.numberOfLines = .zero
         
         return label
     }()
@@ -88,7 +91,16 @@ final class SliceCell: UITableViewCell {
     @objc private func didChangeOdds() {
         guard let text = categoryOdds.text,
               let value = Int(text) else { return }
-        delegate?.didChangeRate(value: value, in: self)
+        textWorkItem?.cancel()
+        
+        let workItem = DispatchWorkItem { [weak self] in
+            guard let strongSelf = self else { return }
+            self?.delegate?.didChangeRate(value: value, in: strongSelf)
+        }
+        
+        textWorkItem = workItem
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: workItem)
     }
     
     @objc private func didTapDone() {

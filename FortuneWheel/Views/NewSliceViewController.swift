@@ -78,15 +78,6 @@ final class NewSliceViewController: BaseViewController, Keyboardable {
         return textField
     }()
     
-    private let sliceNameStackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.axis = .vertical
-        stackView.distribution = .fillEqually
-        stackView.spacing = 5
-        
-        return stackView
-    }()
-    
     private lazy var addSliceButton: BaseButton = {
         let button = BaseButton(type: .system)
         button.setTitle("Add slice", for: .normal)
@@ -105,6 +96,51 @@ final class NewSliceViewController: BaseViewController, Keyboardable {
         return label
     }()
     
+    private let colorLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Choose color:"
+        label.textColor = .black
+        
+        return label
+    }()
+    
+    private let selectedColor: UIView = {
+        let view = UIView()
+        view.layer.borderWidth = 1
+        view.backgroundColor = .random()
+        view.layer.borderColor = UIColor.black.cgColor
+        
+        return view
+    }()
+    
+    private let colorStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .horizontal
+        stackView.alignment = .center
+        stackView.distribution = .fill
+        stackView.spacing = 8
+        
+        return stackView
+    }()
+    
+    private lazy var selectColorButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Select...", for: .normal)
+        button.setTitleColor(.link, for: .normal)
+        button.addTarget(self, action: #selector(didTapSelectColor), for: .touchUpInside)
+        
+        return button
+    }()
+    
+    private let mainColorStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .horizontal
+        stackView.alignment = .center
+        stackView.distribution = .equalSpacing
+        
+        return stackView
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         startKeyboardObserve(with: -10)
@@ -114,18 +150,20 @@ final class NewSliceViewController: BaseViewController, Keyboardable {
         super.setupUI()
         sliceNameTextField.becomeFirstResponder()
         
-        [topStackView, sliceNameStackView, addSliceButton, warningLabel].forEach(view.addSubview)
+        [topStackView, sliceNameTextField, addSliceButton, warningLabel, mainColorStackView].forEach(view.addSubview)
         
         [addLabel, backButton].forEach(topStackView.addArrangedSubview)
         
-        [sliceNameTextField].forEach(sliceNameStackView.addArrangedSubview)
+        [colorStackView, selectColorButton].forEach(mainColorStackView.addArrangedSubview)
+        
+        [colorLabel, selectedColor].forEach(colorStackView.addArrangedSubview)
         
         topStackView.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(10)
             make.horizontalEdges.equalToSuperview().inset(10)
         }
         
-        sliceNameStackView.snp.makeConstraints { make in
+        sliceNameTextField.snp.makeConstraints { make in
             make.top.equalTo(addLabel.snp.bottom).offset(20)
             make.horizontalEdges.equalToSuperview().inset(12)
         }
@@ -140,13 +178,31 @@ final class NewSliceViewController: BaseViewController, Keyboardable {
         }
         
         warningLabel.snp.makeConstraints { make in
-            make.top.equalTo(sliceNameStackView.snp.bottom).offset(10)
+            make.top.equalTo(sliceNameTextField.snp.bottom).offset(10)
             make.leading.equalToSuperview().offset(10)
+        }
+        
+        mainColorStackView.snp.makeConstraints { make in
+            make.top.equalTo(warningLabel.snp.top).offset(25)
+            make.horizontalEdges.equalToSuperview().inset(10)
+        }
+        
+        selectedColor.snp.makeConstraints { make in
+            make.size.equalTo(30)
         }
         
         // Dismissing keyboard
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapView))
         view.addGestureRecognizer(tapGesture)
+    }
+    
+    private func presentColorPicker() {
+        let colorPicker = UIColorPickerViewController()
+        colorPicker.title = "Category Color"
+        colorPicker.supportsAlpha = false
+        colorPicker.delegate = self
+        colorPicker.modalPresentationStyle = .popover
+        self.present(colorPicker, animated: true)
     }
     
     @objc private func didTapView() {
@@ -161,12 +217,17 @@ final class NewSliceViewController: BaseViewController, Keyboardable {
         }
         
         warningLabel.isHidden = true
-        sliceSubject.send((sliceText, .random()))
+        let sendColor = selectedColor.backgroundColor
+        sliceSubject.send((sliceText, sendColor ?? .random()))
         self.dismiss(animated: true)
     }
     
     @objc private func didTapBack() {
         self.dismiss(animated: true)
+    }
+    
+    @objc private func didTapSelectColor() {
+        presentColorPicker()
     }
 }
 
@@ -174,5 +235,11 @@ extension NewSliceViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         didTapAddSlice()
         return true
+    }
+}
+
+extension NewSliceViewController: UIColorPickerViewControllerDelegate {
+    func colorPickerViewController(_ viewController: UIColorPickerViewController, didSelect color: UIColor, continuously: Bool) {
+        selectedColor.backgroundColor = color
     }
 }

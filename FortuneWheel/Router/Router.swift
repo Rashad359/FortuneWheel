@@ -16,4 +16,9 @@ class Router {
         let settingsVC = SettingsBuilder().build(in: &storage, receive: receive)
         view?.present(settingsVC, animated: true)
     }
+    
+    func goToColors(storage: inout Set<AnyCancellable>, completion: @escaping(Bool) -> Void) {
+        let colorVC = ColorBuilder().build(storage: &storage, completion: completion)
+        view?.present(colorVC, animated: true)
+    }
 }

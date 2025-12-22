@@ -109,4 +109,26 @@ final class SettingsViewModel {
             self.saveSlices(slices: deletedSlices)
         }
     }
+    
+    func equateOdds() {
+        var finalSlices: [Slice] = []
+        
+        let totalSum = 100
+        
+        var distributedSum = 0
+        
+        for slice in slices {
+            var slice = slice
+            slice.dropRate = totalSum / slices.count
+            finalSlices.append(slice)
+            distributedSum += slice.dropRate
+        }
+        
+        let dust = totalSum - distributedSum
+        
+        finalSlices[0].dropRate += dust
+        
+        self.saveLocalSlices(slices: finalSlices)
+        self.saveSlices(slices: finalSlices)
+    }
 }
