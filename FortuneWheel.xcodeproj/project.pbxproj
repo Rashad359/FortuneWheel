@@ -10,8 +10,19 @@
 		028103A72EEFE90700B8F49B /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 028103A62EEFE90700B8F49B /* SnapKit */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		02BDA0FC2EFBD09400BFF4A9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 028796D82EEBF50100AFAB21 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 028796DF2EEBF50100AFAB21;
+			remoteInfo = FortuneWheel;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		028796E02EEBF50100AFAB21 /* FortuneWheel.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FortuneWheel.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		02BDA0F82EFBD09400BFF4A9 /* FortuneWheelTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FortuneWheelTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -44,6 +55,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		02BDA0F52EFBD09400BFF4A9 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -59,6 +77,7 @@
 			isa = PBXGroup;
 			children = (
 				028796E02EEBF50100AFAB21 /* FortuneWheel.app */,
+				02BDA0F82EFBD09400BFF4A9 /* FortuneWheelTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -89,6 +108,26 @@
 			productReference = 028796E02EEBF50100AFAB21 /* FortuneWheel.app */;
 			productType = "com.apple.product-type.application";
 		};
+		02BDA0F72EFBD09400BFF4A9 /* FortuneWheelTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 02BDA1002EFBD09400BFF4A9 /* Build configuration list for PBXNativeTarget "FortuneWheelTests" */;
+			buildPhases = (
+				02BDA0F42EFBD09400BFF4A9 /* Sources */,
+				02BDA0F52EFBD09400BFF4A9 /* Frameworks */,
+				02BDA0F62EFBD09400BFF4A9 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				02BDA0FD2EFBD09400BFF4A9 /* PBXTargetDependency */,
+			);
+			name = FortuneWheelTests;
+			packageProductDependencies = (
+			);
+			productName = FortuneWheelTests;
+			productReference = 02BDA0F82EFBD09400BFF4A9 /* FortuneWheelTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -101,6 +140,10 @@
 				TargetAttributes = {
 					028796DF2EEBF50100AFAB21 = {
 						CreatedOnToolsVersion = 26.0;
+					};
+					02BDA0F72EFBD09400BFF4A9 = {
+						CreatedOnToolsVersion = 26.0;
+						TestTargetID = 028796DF2EEBF50100AFAB21;
 					};
 				};
 			};
@@ -122,12 +165,20 @@
 			projectRoot = "";
 			targets = (
 				028796DF2EEBF50100AFAB21 /* FortuneWheel */,
+				02BDA0F72EFBD09400BFF4A9 /* FortuneWheelTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		028796DE2EEBF50100AFAB21 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		02BDA0F62EFBD09400BFF4A9 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -144,7 +195,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		02BDA0F42EFBD09400BFF4A9 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		02BDA0FD2EFBD09400BFF4A9 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 028796DF2EEBF50100AFAB21 /* FortuneWheel */;
+			targetProxy = 02BDA0FC2EFBD09400BFF4A9 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		028796F42EEBF50200AFAB21 /* Debug */ = {
@@ -330,6 +396,48 @@
 			};
 			name = Release;
 		};
+		02BDA0FE2EFBD09400BFF4A9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 66D29S5VUM;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.rashadaliyev.FortuneWheelTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FortuneWheel.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/FortuneWheel";
+			};
+			name = Debug;
+		};
+		02BDA0FF2EFBD09400BFF4A9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 66D29S5VUM;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.rashadaliyev.FortuneWheelTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FortuneWheel.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/FortuneWheel";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -347,6 +455,15 @@
 			buildConfigurations = (
 				028796F42EEBF50200AFAB21 /* Debug */,
 				028796F52EEBF50200AFAB21 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		02BDA1002EFBD09400BFF4A9 /* Build configuration list for PBXNativeTarget "FortuneWheelTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				02BDA0FE2EFBD09400BFF4A9 /* Debug */,
+				02BDA0FF2EFBD09400BFF4A9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

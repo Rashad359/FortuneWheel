@@ -53,9 +53,9 @@ class FortuneWheel: UIView {
     // Creates and returns a Fortune Wheel with its center aligned to center CGPoint, diameter and slices drawn
     init(center: CGPoint, diameter: CGFloat, slices: [Slice]) {
         super.init(frame: CGRect(origin: CGPoint(x: center.x - diameter / 2,
-                                                      y: center.y - diameter / 2),
-                                      size: CGSize.init(width: diameter,
-                                                        height: diameter)))
+                                                 y: center.y - diameter / 2),
+                                                 size: CGSize.init(width: diameter,
+                                                                   height: diameter)))
         self.slices = slices
         self.initialSetUp()
     }
@@ -150,7 +150,7 @@ class FortuneWheel: UIView {
         }
     }
     
-    // Add selection indicators
+    // Add selection indicator
     private func addIndicator() {
         //Calculating the position of the indicator such that half overlaps with the view and the rest is outside of the view and locating indicator at the right side center of the wheel.
         let position = CGPoint(x: self.frame.width - self.indicatorSize.width,

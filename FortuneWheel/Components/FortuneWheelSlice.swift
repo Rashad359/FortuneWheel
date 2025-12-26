@@ -40,8 +40,7 @@ class FortuneWheelSlice: CALayer {
     
     override func draw(in ctx: CGContext) {
         
-        //Rotated Image
-//        let image = self.slice.image.rotateImage(angle: self.startAngle)!
+        // Label
         let label = self.slice.label
         
         // The radius of the wheel
@@ -92,7 +91,7 @@ class FortuneWheelSlice: CALayer {
         path.addArc(withCenter: center,
                     radius: radius,
                     startAngle: self.startAngle,
-                    endAngle: self.startAngle + self.sectorAngle,
+                    endAngle: self.startAngle + self.sectorAngle, 
                     clockwise: true)
         path.close()
         // Applies the slice color
@@ -118,13 +117,5 @@ class FortuneWheelSlice: CALayer {
         
         label.drawText(in: labelRect)
         UIGraphicsPopContext()
-    }
-    
-    
-}
-
-extension Degree {
-    func toRadians() -> Radians {
-        return (self * .pi) / 180.0
     }
 }

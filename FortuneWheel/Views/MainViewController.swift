@@ -106,20 +106,12 @@ final class MainViewController: BaseViewController {
         self.currentFortuneWheel = fortuneWheel
     }
     
-    private func presentColorPicker() {
-        let colorPicker = UIColorPickerViewController()
-        colorPicker.title = "Background Color"
-        colorPicker.supportsAlpha = false
-        colorPicker.delegate = self
-        colorPicker.modalPresentationStyle = .popover
-        self.present(colorPicker, animated: true)
-    }
-    
 
     @objc private func didTapSettings() {
         viewModel.navigateToSettings(in: &cancellable) {[weak self] updateNeeded in
             if updateNeeded {
                 
+                self?.viewModel.resetHistory()
                 self?.updateFortuneWheel()
                 
             } else {
@@ -132,6 +124,7 @@ final class MainViewController: BaseViewController {
         viewModel.navigateToNewCategory(in: &cancellable) {[weak self] (category, color) in
             
             self?.viewModel.appendSlice(category: category, color: color)
+            self?.viewModel.resetHistory()
             self?.updateFortuneWheel()
         }
     }
@@ -140,6 +133,7 @@ final class MainViewController: BaseViewController {
         viewModel.navigateToColors(storage: &cancellable) {[weak self] updateNeeded in
             if updateNeeded {
                 
+                self?.viewModel.resetHistory()
                 self?.updateFortuneWheel()
                 
             } else {
@@ -161,11 +155,5 @@ extension MainViewController: FortuneWheelDelegate {
         
         // Notify user of the result
         self.showAlert(title: "Congratulations!", message: "You have won \(category)", buttonTitle: "Cool!")
-    }
-}
-
-extension MainViewController: UIColorPickerViewControllerDelegate {
-    func colorPickerViewController(_ viewController: UIColorPickerViewController, didSelect color: UIColor, continuously: Bool) {
-        view.backgroundColor = color
     }
 }
