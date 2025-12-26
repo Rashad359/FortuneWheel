@@ -33,7 +33,7 @@ final class SliceCell: UITableViewCell {
         )
         textField.keyboardType = .numberPad
         textField.delegate = self
-        textField.textAlignment = .right
+        textField.textAlignment = .left
         
         return textField
     }()
